@@ -216,3 +216,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Entorno virtual de Python
+.venv/
+
+# Grabaciones originales: mantener privadas
+data/raw/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+
+# Archivos del sistema macOS
+.DS_Store
