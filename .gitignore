@@ -220,9 +220,6 @@ __marimo__/
 # Entorno virtual de Python
 .venv/
 
-# Grabaciones originales: mantener privadas
-data/raw/
-
 # Archivos temporales de Python
 __pycache__/
 *.pyc

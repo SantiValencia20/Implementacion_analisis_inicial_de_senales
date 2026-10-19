@@ -1,12 +1,31 @@
 
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from scipy.fft import rfft, rfftfreq
 from pathlib import Path
 
-# Ruta del audio
-audio_path = Path("data/raw/respiracion_001.wav")
+# Determinar el archivo de audio a analizar (por argumento o por defecto)
+if len(sys.argv) > 1:
+    audio_path = Path(sys.argv[1])
+else:
+    if Path("data/raw/respiracion_002.wav").exists():
+        audio_path = Path("data/raw/respiracion_002.wav")
+    else:
+        audio_path = Path("data/raw/respiracion_001.wav")
+
+# Carpeta de salida según el archivo para no sobreescribir resultados
+if "002" in audio_path.name or "santiago" in audio_path.name.lower():
+    output_dir = Path("results/santiago")
+elif "001" in audio_path.name or "sandra" in audio_path.name.lower():
+    output_dir = Path("results/sandra")
+else:
+    output_dir = Path("results")
+
+output_dir.mkdir(parents=True, exist_ok=True)
+print(f"Analizando: {audio_path}")
+print(f"Guardando resultados en: {output_dir}")
 
 # Cargar señal
 fs, audio = wavfile.read(audio_path)
@@ -53,8 +72,7 @@ plt.grid(True)
 plt.tight_layout()
 
 # Guardar resultado
-Path("results").mkdir(exist_ok=True)
-plt.savefig("results/respiratory_waveform.png")
+plt.savefig(output_dir / "respiratory_waveform.png")
 plt.show()
 
 # Análisis de la señal en el dominio de la frecuencia
@@ -78,7 +96,7 @@ plt.grid(True)
 plt.tight_layout()
 
 # Guardar la gráfica
-plt.savefig("results/respiratory_spectrum.png")
+plt.savefig(output_dir / "respiratory_spectrum.png")
 plt.show()
 
 # Graficar la señal respiratoria normalizada
@@ -95,7 +113,7 @@ plt.grid(True)
 plt.tight_layout()
 
 # Guardar la gráfica normalizada
-plt.savefig("results/respiratory_normalized.png")
+plt.savefig(output_dir / "respiratory_normalized.png")
 
 plt.show()
 
@@ -135,7 +153,7 @@ plt.grid(True)
 plt.tight_layout()
 
 # Guardar la gráfica del segmento
-plt.savefig("results/respiratory_segment_01.png")
+plt.savefig(output_dir / "respiratory_segment_01.png")
 
 plt.show()
 
@@ -154,7 +172,7 @@ for i, segment in enumerate(segments):
 axes[-1].set_xlabel("Tiempo dentro del segmento (s)")
 
 plt.tight_layout()
-plt.savefig("results/respiratory_all_segments.png")
+plt.savefig(output_dir / "respiratory_all_segments.png")
 plt.show()
 
 # Calcular el valor RMS de cada segmento
@@ -177,7 +195,7 @@ rms_table = np.column_stack((
 ))
 
 np.savetxt(
-    "results/respiratory_segment_rms.csv",
+    output_dir / "respiratory_segment_rms.csv",
     rms_table,
     delimiter=",",
     header="segmento,rms",
@@ -185,4 +203,4 @@ np.savetxt(
     fmt=["%d", "%.6f"]
 )
 
-print("Valores RMS guardados en results/respiratory_segment_rms.csv")
+print(f"Valores RMS guardados en {output_dir / 'respiratory_segment_rms.csv'}")
