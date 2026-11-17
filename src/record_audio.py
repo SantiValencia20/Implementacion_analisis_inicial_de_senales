@@ -1,47 +1,61 @@
-import sounddevice as sd
-from scipy.io.wavfile import write
+"""Grabación PCM16 con validación de dispositivo y creación exclusiva."""
+import argparse
 from pathlib import Path
+import math
+from scipy.io import wavfile
 
-# Configuración de la grabación
-fs = 44100          # Frecuencia de muestreo en Hz
-duration = 10       # Duración de la grabación en segundos
-channels = 1        # Audio mono
 
-# Seleccionar el micrófono que deseas utilizar 
-sd.default.device = (1, None)
-# Carpeta donde guardaremos los audios originales
-output_dir = Path("data/raw")
-output_dir.mkdir(parents=True, exist_ok=True)
+def record(duration=10, fs=44100, device=None, output='data/raw'):
+    import sounddevice as sd
+    if not math.isfinite(duration) or duration <= 0 or fs <= 0 or round(duration*fs) < 1:
+        raise ValueError('Duración y frecuencia de muestreo deben ser positivas.')
+    sd.check_input_settings(device=device, channels=1, dtype='int16', samplerate=fs)
+    print('Grabando. Respira de forma natural, sin forzar la respiración.')
+    audio = sd.rec(round(duration*fs), samplerate=fs, channels=1, dtype='int16', device=device)
+    status = sd.wait()
+    if status:
+        raise RuntimeError(f'La captura presentó desbordamiento u otro error: {status}')
+    folder = Path(output)
+    folder.mkdir(parents=True, exist_ok=True)
+    index = 1
+    while True:
+        path = folder / f'respiracion_{index:03d}.wav'
+        try:
+            handle = path.open('xb')
+            break
+        except FileExistsError:
+            index += 1
+    with handle:
+        wavfile.write(handle, fs, audio)
+    print(f'Grabación guardada: {path} ({duration:g} s, {fs} Hz, mono PCM16).')
+    return path
 
-# Buscar el siguiente número de grabación disponible
-recording_number = 1
 
-while True:
-    filename = f"respiracion_{recording_number:03d}.wav"
-    output_path = output_dir / filename
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--duration', type=float, default=10)
+    parser.add_argument('--fs', type=int, default=44100)
+    parser.add_argument('--device', help='Índice o nombre del dispositivo; por defecto el del sistema.')
+    parser.add_argument('--output', default='data/raw')
+    parser.add_argument('--list-devices', action='store_true')
+    a = parser.parse_args(argv)
+    try:
+        import sounddevice as sd
+    except (ImportError, OSError) as exc:
+        parser.exit(1, f'No se pudo cargar SoundDevice/PortAudio: {exc}. Revise la instalación.\n')
+    try:
+        if a.list_devices:
+            print(sd.query_devices())
+            return 0
+        device = int(a.device) if a.device is not None and a.device.isdigit() else a.device
+        record(a.duration, a.fs, device, a.output)
+    except (OSError, ValueError, RuntimeError, sd.PortAudioError) as exc:
+        parser.exit(1, f'No se pudo grabar: {exc}. Revise dispositivo, conexión, PortAudio y permisos de micrófono del terminal/VS Code en el sistema.\n')
+    except KeyboardInterrupt:
+        sd.stop()
+        parser.exit(130, 'Grabación cancelada.\n')
+    return 0
 
-    if not output_path.exists():
-        break
 
-    recording_number += 1
-
-print("La grabación comenzará ahora.")
-print("Respira de forma natural, sin forzar la respiración.")
-
-# Grabar desde el micrófono
-audio = sd.rec(
-    int(duration * fs),
-    samplerate=fs,
-    channels=channels,
-    dtype="int16"
-)
-
-sd.wait()
-
-# Guardar el audio en formato WAV
-write(output_path, fs, audio)
-
-print("Grabación finalizada.")
-print(f"Archivo guardado en: {output_path}")
-print(f"Frecuencia de muestreo: {fs} Hz")
-print(f"Duración: {duration} segundos")
+if __name__ == '__main__':
+    raise SystemExit(main())

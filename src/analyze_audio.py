@@ -1,206 +1,48 @@
-
-import sys
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.io import wavfile
-from scipy.fft import rfft, rfftfreq
+"""CLI compatible con python src/analyze_audio.py [archivo o carpeta]."""
+import argparse
 from pathlib import Path
+import sys
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.pipeline import Config, process
 
-# Determinar el archivo de audio a analizar (por argumento o por defecto)
-if len(sys.argv) > 1:
-    audio_path = Path(sys.argv[1])
-else:
-    if Path("data/raw/respiracion_002.wav").exists():
-        audio_path = Path("data/raw/respiracion_002.wav")
-    else:
-        audio_path = Path("data/raw/respiracion_001.wav")
 
-# Carpeta de salida según el archivo para no sobreescribir resultados
-if "002" in audio_path.name or "santiago" in audio_path.name.lower():
-    output_dir = Path("results/santiago")
-elif "001" in audio_path.name or "sandra" in audio_path.name.lower():
-    output_dir = Path("results/sandra")
-else:
-    output_dir = Path("results")
+def main(argv=None):
+    parser = argparse.ArgumentParser(description='Análisis académico de WAV, individual o por carpeta.')
+    default = 'data/raw/respiracion_002.wav' if Path('data/raw/respiracion_002.wav').exists() else 'data/raw/respiracion_001.wav'
+    parser.add_argument('input', nargs='?', default=default)
+    parser.add_argument('--output', default='results')
+    parser.add_argument('--labels')
+    parser.add_argument('--low', type=float)
+    parser.add_argument('--high', type=float)
+    parser.add_argument('--order', type=int, default=4)
+    parser.add_argument('--no-dc', action='store_true')
+    parser.add_argument('--no-normalize', action='store_true')
+    parser.add_argument('--segment-duration', type=float, default=2)
+    parser.add_argument('--segment-overlap', type=float, default=0)
+    parser.add_argument('--segment-window', default='boxcar')
+    parser.add_argument('--incomplete', choices=['drop', 'keep'], default='drop')
+    parser.add_argument('--stft-size', type=int, default=1024)
+    parser.add_argument('--stft-overlap', type=float, default=0.5)
+    parser.add_argument('--stft-window', default='hann')
+    parser.add_argument('--db-floor', type=float, default=-100)
+    parser.add_argument('--max-frequency', type=float)
+    a = parser.parse_args(argv)
+    cfg = Config(low=a.low, high=a.high, order=a.order, remove_dc=not a.no_dc,
+                 normalize_peak=not a.no_normalize, segment_duration=a.segment_duration,
+                 segment_overlap=a.segment_overlap, segment_window=a.segment_window,
+                 incomplete=a.incomplete, stft_size=a.stft_size,
+                 stft_overlap=a.stft_overlap, stft_window=a.stft_window,
+                 db_floor=a.db_floor, max_frequency=a.max_frequency)
+    try:
+        run, success, errors = process(a.input, a.output, cfg, a.labels)
+    except (ValueError, OSError) as exc:
+        parser.exit(1, f'Error: {exc}\n')
+    print(f'Resultados: {run}; archivos correctos: {success}; errores: {len(errors)}')
+    for error in errors:
+        print(f"  {error['file_id']}: {error['error']}", file=sys.stderr)
+    return 0 if success else 1
 
-output_dir.mkdir(parents=True, exist_ok=True)
-print(f"Analizando: {audio_path}")
-print(f"Guardando resultados en: {output_dir}")
 
-# Cargar señal
-fs, audio = wavfile.read(audio_path)
-
-# Convertir estéreo a mono
-if audio.ndim == 2:
-    audio = audio.mean(axis=1)
-
-# Normalizar la amplitud de la señal
-audio_float = audio.astype(np.float64)
-
-max_amplitude = np.max(np.abs(audio_float)) 
-
-if max_amplitude > 0:
-    audio_normalized = audio_float / max_amplitude
-else:
-    audio_normalized = audio_float
-
-print("Normalización de amplitud realizada correctamente")
-print(f"Amplitud normalizada mínima: {np.min(audio_normalized):.4f}")
-print(f"Amplitud normalizada máxima: {np.max(audio_normalized):.4f}")
-
-# Crear eje de tiempo
-time = np.arange(len(audio)) / fs
-
-# Características básicas
-duration = len(audio) / fs
-
-print(f"Frecuencia de muestreo: {fs} Hz")
-print(f"Periodo de muestreo: {1/fs:.8f} s")
-print(f"Duración: {duration:.2f} s")
-print(f"Número de muestras: {len(audio)}")
-print(f"Amplitud mínima: {np.min(audio)}")
-print(f"Amplitud máxima: {np.max(audio)}")
-print(f"Amplitud media: {np.mean(audio):.2f}")
-
-# Graficar señal
-plt.figure(figsize=(12, 4))
-plt.plot(time, audio)
-plt.title("Señal respiratoria en el dominio del tiempo")
-plt.xlabel("Tiempo (s)")
-plt.ylabel("Amplitud digital (PCM de 16 bits)")
-plt.grid(True)
-plt.tight_layout()
-
-# Guardar resultado
-plt.savefig(output_dir / "respiratory_waveform.png")
-plt.show()
-
-# Análisis de la señal en el dominio de la frecuencia
-audio_float = audio.astype(np.float64)
-
-# Calcular la FFT
-fft_values = rfft(audio_float)
-frequencies = rfftfreq(len(audio_float), d=1/fs)
-
-# Calcular el espectro de magnitud
-magnitude = np.abs(fft_values) / len(audio_float)
-
-# Graficar el espectro
-plt.figure(figsize=(12, 4))
-plt.plot(frequencies, magnitude)
-
-plt.title("Espectro de frecuencia de la señal respiratoria")
-plt.xlabel("Frecuencia (Hz)")
-plt.ylabel("Magnitud espectral (unidades digitales)")
-plt.grid(True)
-plt.tight_layout()
-
-# Guardar la gráfica
-plt.savefig(output_dir / "respiratory_spectrum.png")
-plt.show()
-
-# Graficar la señal respiratoria normalizada
-plt.figure(figsize=(12, 4))
-
-plt.plot(time, audio_normalized)
-
-plt.title("Señal respiratoria normalizada")
-plt.xlabel("Tiempo (s)")
-plt.ylabel("Amplitud normalizada (adimensional)")
-
-plt.ylim(-1.1, 1.1)
-plt.grid(True)
-plt.tight_layout()
-
-# Guardar la gráfica normalizada
-plt.savefig(output_dir / "respiratory_normalized.png")
-
-plt.show()
-
-# Segmentación de la señal respiratoria
-segment_duration = 2  # Duración de cada segmento en segundos
-samples_per_segment = int(segment_duration * fs)
-
-segments = []
-
-for start in range(0, len(audio_normalized), samples_per_segment):
-    end = start + samples_per_segment
-    segment = audio_normalized[start:end]
-
-    if len(segment) == samples_per_segment:
-        segments.append(segment)
-
-print(f"Duración de cada segmento: {segment_duration} segundos")
-print(f"Muestras por segmento: {samples_per_segment}")
-print(f"Número de segmentos completos: {len(segments)}")
-
-# Visualizar el primer segmento de la señal
-first_segment = segments[0]
-
-# Crear el eje de tiempo del segmento
-segment_time = np.arange(len(first_segment)) / fs
-
-plt.figure(figsize=(12, 4))
-
-plt.plot(segment_time, first_segment)
-
-plt.title("Primer segmento de la señal respiratoria normalizada")
-plt.xlabel("Tiempo (s)")
-plt.ylabel("Amplitud normalizada (adimensional)")
-
-plt.ylim(-1.1, 1.1)
-plt.grid(True)
-plt.tight_layout()
-
-# Guardar la gráfica del segmento
-plt.savefig(output_dir / "respiratory_segment_01.png")
-
-plt.show()
-
-# Visualizar todos los segmentos de la señal
-fig, axes = plt.subplots(len(segments), 1, figsize=(12, 10))
-
-for i, segment in enumerate(segments):
-    segment_time = np.arange(len(segment)) / fs
-
-    axes[i].plot(segment_time, segment)
-    axes[i].set_title(f"Segmento {i + 1}: {i * 2} a {(i + 1) * 2} segundos")
-    axes[i].set_ylabel("Amplitud")
-    axes[i].set_ylim(-1.1, 1.1)
-    axes[i].grid(True)
-
-axes[-1].set_xlabel("Tiempo dentro del segmento (s)")
-
-plt.tight_layout()
-plt.savefig(output_dir / "respiratory_all_segments.png")
-plt.show()
-
-# Calcular el valor RMS de cada segmento
-print("\nValores RMS de los segmentos:")
-
-for i, segment in enumerate(segments):
-    rms = np.sqrt(np.mean(segment ** 2))
-    print(f"Segmento {i + 1}: RMS = {rms:.6f}")
-
-# Guardar los valores RMS en un archivo CSV
-rms_values = []
-
-for segment in segments:
-    rms = np.sqrt(np.mean(segment ** 2))
-    rms_values.append(rms)
-
-rms_table = np.column_stack((
-    np.arange(1, len(rms_values) + 1),
-    rms_values
-))
-
-np.savetxt(
-    output_dir / "respiratory_segment_rms.csv",
-    rms_table,
-    delimiter=",",
-    header="segmento,rms",
-    comments="",
-    fmt=["%d", "%.6f"]
-)
-
-print(f"Valores RMS guardados en {output_dir / 'respiratory_segment_rms.csv'}")
+if __name__ == '__main__':
+    raise SystemExit(main())
