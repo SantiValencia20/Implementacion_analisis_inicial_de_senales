@@ -1,579 +1,195 @@
-# Implementacion_analisis_inicial_de_senales
-Segunda entrega del proyecto semestral
-
 # Análisis y clasificación de señales respiratorias mediante audio
 
-## 1. Nombre del proyecto e integrantes
+Proyecto académico de Teoría de Señales de Santiago Valencia Londoño y Sandra Milena Ramos. Permite adquirir WAV, estudiar señales en tiempo y frecuencia, filtrar, calcular STFT, extraer características por ventanas y experimentar con clasificación supervisada. **No realiza diagnósticos ni identifica enfermedades.** Una característica acústica no constituye una etiqueta clínica.
 
-**Proyecto:** Análisis y clasificación de señales respiratorias mediante audio
+La documentación de la entrega inicial y sus referencias se conservan en [docs/INITIAL_IMPLEMENTATION.md](docs/INITIAL_IMPLEMENTATION.md) como registro histórico; sus instrucciones y afirmaciones de privacidad no describen necesariamente el estado actual. Este README contiene los comandos vigentes.
 
-**Asignatura:** Teoría de Señales
+## Estructura
 
-**Integrantes:**
-- Santiago Valencia Londoño
-- Sandra Milena Ramos
-
----
-
-## 2. Descripción del proyecto
-
-Este proyecto tiene como objetivo estudiar y analizar señales respiratorias obtenidas mediante grabaciones de audio, aplicando conceptos de procesamiento digital de señales para identificar características que permitan diferenciar distintos tipos de sonidos respiratorios.
-
-Los sonidos producidos durante la respiración contienen información acústica que puede ser analizada en los dominios del tiempo y de la frecuencia. A partir de las grabaciones es posible realizar procesos como filtrado, segmentación, análisis espectral y extracción de características.
-
-El proyecto busca explorar posteriormente técnicas de clasificación automática para diferenciar categorías de sonidos respiratorios, tomando como referencia diferentes investigaciones científicas que han utilizado técnicas de procesamiento de señales y aprendizaje automático para analizar sonidos pulmonares, sibilancias y tos.
-
-El sistema se plantea con fines académicos y de investigación y no pretende realizar diagnósticos médicos.
-
----
-
-## 3. Estado actual del proyecto
-
-El proyecto se encuentra en la etapa de **implementación y análisis inicial de señales respiratorias mediante audio**, correspondiente a la segunda entrega del proyecto semestral.
-
-Se ha desarrollado un programa en Python que permite registrar señales de audio y realizar un primer análisis utilizando conceptos de Teoría de Señales.
-
-### Avances realizados
-
-- Investigación sobre señales respiratorias y técnicas de procesamiento digital de señales.
-- Implementación de un programa para realizar grabaciones de audio propias.
-- Captura de una señal de prueba de 10 segundos, en formato WAV, con frecuencia de muestreo de 44.100 Hz.
-- Representación de la señal en el dominio del tiempo.
-- Análisis de frecuencia mediante la transformada rápida de Fourier (FFT).
-- Normalización de amplitud.
-- Segmentación de la grabación en cinco intervalos de dos segundos.
-- Visualización de los segmentos de audio.
-- Cálculo del valor RMS de cada segmento.
-- Exportación de los resultados RMS a un archivo CSV.
-- Organización del código y los resultados en un repositorio de GitHub.
-
-### Pendiente por desarrollar
-
-- Ampliar la colección de grabaciones propias.
-- Documentar las condiciones de adquisición y las posibles fuentes de ruido.
-- Explorar técnicas de filtrado y ventanas para el análisis espectral.
-- Generar espectrogramas y extraer características adicionales.
-- Evaluar posteriormente métodos de clasificación, de acuerdo con el alcance y la disponibilidad de datos.
-
-**Alcance actual:** esta entrega se centra en la adquisición, visualización y análisis inicial de señales. Todavía no se ha implementado un clasificador y el proyecto no tiene fines de diagnóstico médico.
-
-## 4. Datos y recursos
-
-### 4.1 Datos
-
-#### Grabaciones utilizadas en la implementación
-
-Para la segunda entrega se inició la adquisición de señales mediante grabaciones propias, realizadas con un micrófono y un programa desarrollado en Python.
-
-La grabación inicial utilizada para comprobar el funcionamiento del análisis tiene las siguientes características:
-
-| Característica | Valor |
-|---|---|
-| Formato | WAV |
-| Canales | 1 (mono) |
-| Frecuencia de muestreo | 44.100 Hz |
-| Período de muestreo | Aproximadamente 22,68 µs |
-| Duración | 10 segundos |
-| Número de muestras | 441.000 |
-| Representación | PCM de 16 bits |
-| Segmentación | 5 segmentos de 2 segundos |
-
-Las grabaciones se realizan de forma voluntaria, con respiración natural, sin maniobras respiratorias forzadas. El audio puede contener ruido ambiental o del micrófono, por lo que las variaciones observadas no se atribuyen automáticamente a eventos respiratorios específicos.
-
-**Privacidad de los datos:** los archivos originales se almacenan localmente en `data/raw/` y se excluyen del repositorio público mediante `.gitignore`. El repositorio contiene el código y los resultados del procesamiento, pero no las grabaciones personales originales.
-
-Para reproducir el procedimiento, otra persona puede realizar una nueva grabación voluntaria utilizando el programa incluido en el proyecto.
-
-Las bases de datos y publicaciones científicas mencionadas a continuación se utilizan como referencias para la investigación; no corresponden a los audios empleados en esta implementación inicial.
-
-Para el desarrollo del proyecto se están tomando como referencia diferentes bases de datos de sonidos respiratorios utilizadas en investigaciones científicas.
-
-Los artículos analizados muestran diferentes tipos de señales y categorías, entre ellas:
-
-- Respiración normal.
-- Sibilancias (wheezing).
-- Tos.
-- Sonidos pulmonares.
-- Sonidos respiratorios anormales.
-- Sonidos asociados a diferentes condiciones respiratorias.
-
-Las bases de datos estudiadas presentan diferentes características de adquisición, frecuencia de muestreo, duración de las grabaciones, número de participantes y métodos de segmentación.
-
-Por ejemplo, algunos estudios trabajan con segmentos de audio de duración fija, mientras que otros realizan la segmentación teniendo en cuenta el inicio y final de un evento respiratorio específico.
-
-Uno de los estudios analizados utiliza segmentos de dos segundos para el análisis de sonidos pulmonares, mientras que otros trabajos utilizan ventanas de 1024 muestras o segmentos correspondientes a eventos respiratorios específicos.
-
-### 4.2 Estructura propuesta de los datos
-
-La base de datos del proyecto tendrá inicialmente una estructura similar a:
-
-| Campo | Descripción |
-|---|---|
-| ID | Identificador único del audio |
-| Archivo | Nombre del archivo de audio |
-| Clase | Categoría del sonido respiratorio |
-| Duración | Duración de la grabación |
-| Frecuencia de muestreo | Frecuencia utilizada para digitalizar el audio |
-| Fase respiratoria | Inspiración, espiración o ciclo completo |
-| Localización | Lugar donde fue realizada la grabación |
-| Segmento | Identificador del segmento de audio |
-| Etiqueta | Clase utilizada para la clasificación |
-| Fuente | Procedencia del audio |
-| Observaciones | Información adicional sobre la grabación |
-
-### 4.3 Recursos consultados
-
-Se utilizaron artículos científicos relacionados con:
-
-- Clasificación de sonidos respiratorios.
-- Análisis de sonidos pulmonares.
-- Análisis acústico de tos.
-- Clasificación de sibilancias.
-- Extracción de características.
-- Procesamiento digital de señales.
-- Machine Learning aplicado a señales respiratorias.
-
-Las referencias completas se encuentran en la sección **Referencias**.
-
----
-
-## 5. Cómo ejecutar el proyecto
-
-Esta sección explica cómo preparar el entorno de trabajo, identificar y configurar un micrófono, realizar una grabación de prueba y ejecutar el análisis inicial de señales respiratorias.
-
-El procedimiento permite reproducir la metodología del proyecto utilizando grabaciones propias, sin necesidad de acceder a los archivos de audio originales de los integrantes.
-
-### 5.1 Requisitos
-
-Para ejecutar el proyecto se necesita:
-
-- Python 3.
-- Visual Studio Code o un editor de código equivalente.
-- Un micrófono integrado o externo.
-- Acceso a una terminal.
-- Las bibliotecas indicadas en el archivo `requirements.txt`.
-
-El proyecto fue desarrollado y probado en macOS. Los comandos de activación del entorno virtual pueden variar según el sistema operativo.
-
-### 5.2 Descargar y preparar el proyecto
-
-**Paso 1. Obtener el repositorio**
-
-Clonar el repositorio desde GitHub:
-
-```bash
-git clone https://github.com/SantiValencia20/Implementacion_analisis_inicial_de_senales.git
+```text
+src/
+  __init__.py       paquete sin efectos al importar
+  signals.py        lectura, PCM, normalización, filtro, FFT, STFT, segmentos, características
+  pipeline.py       lote, etiquetas, figuras, CSV y metadatos
+  analyze_audio.py  comando de análisis
+  record_audio.py   comando de captura
+  classify.py       entrenamiento, evaluación, persistencia, predicción y demo
+tests/             pruebas con señales artificiales y micrófono simulado
+data/raw/          grabaciones locales (no distribuir sin consentimiento)
+results/           resultados previos y nuevas carpetas run_...
+docs/              historia y verificación de la implementación
+requirements.txt
 ```
 
-Entrar en la carpeta del proyecto:
+## Instalación reproducible
 
-```bash
-cd Implementacion_analisis_inicial_de_senales
-```
+Requiere Python 3.9 o posterior, un micrófono sólo para capturar y las bibliotecas de `requirements.txt`. Se comprobó con Python 3.9 en macOS. Las rutas se manejan con pathlib; Windows dispone de instrucciones pero no se ha probado físicamente en esta implementación.
 
-También es posible descargar el repositorio como archivo ZIP desde GitHub y abrir la carpeta extraída en Visual Studio Code.
-
-**Paso 2. Crear un entorno virtual**
-
-Desde la terminal, ubicada en la carpeta principal del proyecto, ejecutar:
+En macOS, desde la raíz del repositorio:
 
 ```bash
 python3 -m venv .venv
-```
-
-Este comando crea un entorno virtual para instalar las bibliotecas sin afectar otras instalaciones de Python.
-
-**Paso 3. Activar el entorno virtual**
-
-En macOS o Linux:
-
-```bash
 source .venv/bin/activate
+python -m pip install -rrequirements.txt
 ```
 
-En Windows, utilizando PowerShell:
+En Windows PowerShell:
 
 ```powershell
+py -m venv .venv
 .\.venv\Scripts\Activate.ps1
+python -m pip install -rrequirements.txt
 ```
 
-Cuando el entorno virtual está activado, normalmente aparece `(.venv)` al inicio de la línea de la terminal.
+Si las políticas de PowerShell impiden activar el entorno, usar directamente `.\.venv\Scripts\python.exe` en lugar de `python`. SoundDevice necesita PortAudio; si falta su biblioteca en macOS, instalarla con `brew install portaudio`. En Windows las distribuciones habituales de SoundDevice incluyen PortAudio. Para analizar WAV y ejecutar pruebas no es necesario acceder al micrófono. Los rangos de dependencias permiten instalación en distintos Python; `docs/requirements-tested.txt` registra las versiones exactas del entorno verificado.
 
-**Paso 4. Instalar las dependencias**
-
-Ejecutar:
+## Grabación
 
 ```bash
-python3 -m pip install -r requirements.txt
+python src/record_audio.py --list-devices
+python src/record_audio.py --device 1 --duration 10 --fs 44100 --output data/raw
 ```
 
-En Windows, si el comando `python3` no está disponible, puede utilizarse `python`.
+El índice 1 es ilustrativo: seleccionar un dispositivo con canales de entrada de la lista real. Sin `--device`, se usa el dispositivo predeterminado del sistema. Se guarda mono PCM16, con nombres consecutivos y apertura exclusiva para evitar sobrescrituras. Duración y frecuencia deben ser positivas. Se validan los parámetros del dispositivo antes de capturar y se muestran errores de PortAudio, dispositivo o permisos. En macOS autorizar el micrófono para Terminal/VS Code en Privacidad y seguridad; en Windows revisar Privacidad y seguridad → Micrófono. No se puede distinguir con certeza un permiso denegado de todas las fallas del controlador.
 
-Las bibliotecas utilizadas son:
+Grabar voluntariamente con respiración natural, sin forzarla, documentando micrófono, distancia, ambiente, fecha e identificador seudónimo de participante. La captura física no se ha comprobado en esta sesión; las pruebas simulan dispositivo, errores y guardado.
 
-- `numpy`: operaciones numéricas y procesamiento de arreglos.
-- `scipy`: lectura de archivos WAV y análisis mediante FFT.
-- `matplotlib`: generación de gráficas.
-- `sounddevice`: captura de audio desde el micrófono.
-
-### 5.3 Identificar y configurar el micrófono
-
-Antes de grabar, es necesario identificar los dispositivos de entrada de audio disponibles en el computador.
-
-#### 5.3.1 Consultar los dispositivos disponibles
-
-Con el entorno virtual activado, ejecutar en la terminal:
+## Un archivo o una carpeta
 
 ```bash
-python3 -c "import sounddevice as sd; print(sd.query_devices())"
+python src/analyze_audio.py data/raw/respiracion_001.wav --output results
+python src/analyze_audio.py data/raw --output results
+python -m src.analyze_audio data/raw --segment-duration 2 --incomplete keep
+python src/analyze_audio.py --help
 ```
 
-Este comando muestra los dispositivos de audio detectados por Python.
+Sin argumento se conserva la preferencia inicial por `respiracion_002.wav`, o `respiracion_001.wav` si no existe. Una carpeta se explora sin recursión, aceptando `.wav` y `.WAV`. Cada ejecución crea `results/run_FECHA_HORA_ID/`, sin reemplazar resultados anteriores. Cada audio recibe una subcarpeta numerada. Los archivos corruptos o inválidos se registran en `errors.csv` y el lote continúa. El comando devuelve código 1 si ningún archivo tuvo éxito, 0 si hubo al menos uno; revisar siempre `errors.csv` y `manifest.json` para detectar éxitos parciales. No se abren ventanas gráficas: se generan PNG con backend Agg.
 
-La salida puede tener una estructura similar a la siguiente:
+Resultados:
 
-```text
-0 Altavoces del equipo, 0 in, 2 out
-1 Micrófono USB, 1 in, 0 out
-2 Micrófono integrado, 1 in, 0 out
-```
+- `features.csv`: características consolidadas de todos los segmentos válidos.
+- `errors.csv`: archivo y error, con encabezado incluso cuando no hay errores.
+- `manifest.json`: configuración, archivos correctos/fallidos y número de segmentos.
+- Por audio: `summary.json` con estadísticas originales/procesadas y configuración, `features.csv`, `respiratory_segment_rms.csv`, figuras temporal, espectral, normalizada, de segmentos y `spectrogram.png`.
 
-**Nota:** este resultado es solamente un ejemplo. Los nombres y números de los dispositivos dependen de cada computador.
+Si no existen segmentos completos se exporta un CSV vacío con encabezado y el resumen indica cero segmentos. Usar `--incomplete keep` para conservar señales menores que una ventana. Las figuras de primer segmento sólo existen cuando hay al menos uno.
 
-Cada dispositivo tiene un identificador numérico y una cantidad de canales de entrada y salida.
+## Lectura y preprocesamiento
 
-- `in`: número de canales de entrada de audio.
-- `out`: número de canales de salida de audio.
-- `1 in` o más: el dispositivo puede recibir audio.
-- `0 in`: el dispositivo no dispone de canales de entrada.
+Se validan tasa de muestreo, dimensiones, longitud y valores finitos. PCM uint8 se convierte mediante `(x-128)/128`; PCM firmado se divide por `2**(bits-1)`. SciPy entrega PCM24 alineado a la izquierda dentro de int32, compatible con esta conversión. WAV flotante conserva su escala, que puede superar ±1. El estéreo o multicanal se promedia después de convertir a float64 para evitar overflow; canales en oposición de fase pueden cancelarse.
 
-Para grabar, se debe seleccionar un dispositivo que tenga al menos un canal de entrada.
+Orden: conversión → mono → eliminación de media DC → normalización por pico de toda la grabación → filtro opcional → segmentación. `--no-dc` conserva DC y `--no-normalize` conserva escala PCM relativa. El silencio queda en cero. Normalizar cada grabación elimina información de nivel entre grabaciones y puede amplificar ruido tenue; para comparar nivel digital usar `--no-normalize` con condiciones de captura comparables. Las amplitudes no están calibradas en presión acústica ni dB SPL.
 
-#### 5.3.2 Seleccionar el dispositivo en el programa
+## Filtrado Butterworth
 
-Abrir el archivo:
+El filtro está **desactivado por defecto**: no se fija una banda respiratoria universal. Seleccionar cortes tras inspeccionar espectro, ruido, tasa y objetivo académico; registrar la justificación de la banda elegida. `--low` activa pasa altos, `--high` pasa bajos y ambos un pasa banda. El orden por defecto es 4 y puede configurarse entre 1 y 20. Todos los cortes deben cumplir `0 < corte < fs/2`; el inferior debe ser menor que el superior.
 
-`src/record_audio.py`
+Ejemplo exclusivamente de un experimento de banco: para conservar un tono sintético de 100 Hz y rechazar otro de 1200 Hz a fs=4000, las pruebas usan pasa bajos de 300 Hz. **Ese corte no es una recomendación para respiración.** Una vez justificados tus cortes, introducirlos con `--low VALOR_HZ --high VALOR_HZ --order 4`.
 
-Localizar la parte del código donde se selecciona el dispositivo de entrada o donde se llama a la función `sd.rec()`.
+Se usan secciones de segundo orden (SOS) y `sosfiltfilt`: fase cero, procesamiento fuera de línea y respuesta de magnitud al cuadrado respecto de una pasada; el orden efectivo se duplica (un pasa banda transforma además el prototipo). Hay transitorios de borde. Una señal que no admite el padding requerido se rechaza y registra; no se aplica a escondidas un filtro causal. Desactivar el filtro o reducir orden para esas señales.
 
-La configuración puede aparecer como una variable:
+Las figuras comparan la señal PCM convertida con el resultado completo del preprocesamiento; las diferencias también pueden proceder de DC y normalización. Para aislar visualmente el efecto del filtro usar `--no-dc --no-normalize` y los cortes justificados. No se renormaliza después de filtrar, para conservar su atenuación.
 
-```python
-device_index = 1
-```
+## Características y unidades
 
-O como un argumento de la función de grabación:
+`summary.json` contiene estadísticas de toda la grabación antes y después de procesar. Cada fila de `features.csv` describe un segmento de la señal procesada (con la ventana elegida aplicada).
 
-```python
-device=1
-```
-
-Estos son ejemplos de las formas en que puede indicarse el dispositivo. Se debe modificar **la configuración que realmente exista en el archivo**, sin agregar líneas innecesarias.
-
-El número debe coincidir con el identificador mostrado al consultar los dispositivos disponibles.
-
-Por ejemplo, si el micrófono deseado aparece con el identificador `2`, se debe utilizar ese número en la configuración correspondiente.
-
-No se recomienda copiar automáticamente el número utilizado por otro computador, ya que los identificadores pueden cambiar.
-
-#### 5.3.3 Revisar los permisos del micrófono
-
-Si el programa presenta errores al acceder al micrófono, es necesario comprobar los permisos del sistema operativo.
-
-**En macOS:**
-
-1. Abrir **Configuración del Sistema**.
-2. Entrar en **Privacidad y seguridad**.
-3. Seleccionar **Micrófono**.
-4. Verificar que la aplicación utilizada para ejecutar Python tenga permiso de acceso.
-
-También se puede revisar el micrófono seleccionado en:
-
-**Configuración del Sistema → Sonido → Entrada**
-
-**En Windows:**
-
-1. Abrir **Configuración**.
-2. Entrar en **Privacidad y seguridad → Micrófono**.
-3. Verificar que el acceso al micrófono esté permitido para las aplicaciones correspondientes.
-
-La ubicación exacta de estas opciones puede variar según la versión del sistema operativo.
-
-### 5.4 Realizar una grabación de prueba
-
-Una vez identificado y configurado el micrófono, ejecutar desde la carpeta principal del proyecto:
-
-```bash
-python3 src/record_audio.py
-```
-
-El programa realiza una grabación de audio con las siguientes características:
-
-| Parámetro | Valor |
+| Columna | Definición / unidad |
 |---|---|
-| Duración | 10 segundos |
-| Frecuencia de muestreo | 44.100 Hz |
-| Canales | 1 (mono) |
-| Formato | WAV |
-| Codificación | PCM de 16 bits |
-| Carpeta de almacenamiento | `data/raw/` |
+| file_id, segment_id | Nombre de archivo y segmento desde 1; nombres únicos dentro del lote |
+| start_s, stop_s | Intervalo [inicio, fin) en segundos |
+| sample_rate_hz, sample_period_s | fs en Hz y 1/fs en segundos |
+| duration_s, n_samples | Longitud/fs en segundos y número de muestras |
+| minimum, maximum, mean, std | Extremos, media y desviación poblacional; amplitud relativa |
+| rms | Raíz de la media de x²; amplitud relativa |
+| energy | Suma de x²; amplitud relativa² por muestra sumada (no joules) |
+| zcr_per_s | Cambios de signo / ((N-1)/fs), cruces/s; cero pertenece al signo positivo |
+| dominant_hz | Frecuencia del bin de mayor magnitud, incluye DC si se conserva |
+| centroid_hz | Media de frecuencias ponderada por magnitud unilateral, Hz |
+| bandwidth_hz | Desviación de frecuencias respecto del centroide, ponderada por magnitud, Hz |
+| human_label, label_source | Etiqueta explícita y procedencia humana; vacías sin anotación |
+| participant_id | Identificador seudónimo opcional para agrupar |
+| data_source | `real` para WAV analizado; `synthetic` para la demostración |
 
-Las grabaciones se guardan con nombres consecutivos, por ejemplo:
+FFT real: `rfft` y `rfftfreq(N, 1/fs)`; magnitud `abs(FFT)/N`, duplicando sólo bins interiores, sin duplicar DC ni Nyquist para N par. Un seno alineado a un bin de amplitud A presenta pico A. Se usa ventana rectangular para la FFT global; fuga espectral y resolución fs/N afectan la frecuencia dominante. Silencio: dominante, centroide y ancho se definen como 0. No se interpreta ese 0 como evento físico. Energía depende de longitud, por lo que conviene mantener segmentos del mismo tamaño para clasificar.
 
-```text
-data/raw/respiracion_001.wav
-data/raw/respiracion_002.wav
-data/raw/respiracion_003.wav
-```
-
-Se recomienda realizar la grabación en un ambiente tranquilo, mantener una distancia aproximadamente constante respecto al micrófono y respirar de forma natural.
-
-La participación debe ser voluntaria. No se requieren maniobras respiratorias forzadas ni procedimientos médicos.
-
-### 5.5 Ejecutar el análisis de la señal
-
-El programa de análisis se encuentra en:
-
-`src/analyze_audio.py`
-
-Actualmente, está configurado para analizar el archivo:
-
-```text
-data/raw/respiracion_001.wav
-```
-
-Si se desea analizar otra grabación, es necesario abrir `src/analyze_audio.py` y modificar la ruta del archivo de entrada:
-
-```python
-audio_path = Path("data/raw/respiracion_001.wav")
-```
-
-Por ejemplo, para analizar la segunda grabación:
-
-```python
-audio_path = Path("data/raw/respiracion_002.wav")
-```
-
-Después de guardar los cambios, ejecutar desde la carpeta principal del proyecto:
+## Espectrograma mediante STFT de SciPy
 
 ```bash
-python3 src/analyze_audio.py
+python src/analyze_audio.py data/raw --stft-size 1024 --stft-window hann --stft-overlap 0.5 --db-floor -100 --max-frequency 4000
 ```
 
-El programa realiza las siguientes operaciones:
+`--stft-size` está en muestras; `--stft-overlap` es fracción [0,1). Ventanas aceptadas por SciPy incluyen hann, hamming y boxcar. Para señales más cortas se reduce la ventana a la longitud real. Sin extensión de bordes ni padding final; la STFT puede omitir una cola menor que un salto. La representación usa `20 log10(abs(Z))` con piso configurable negativo, respecto a amplitud digital 1, sin calibración SPL. El eje horizontal está en segundos y el vertical en Hz. Mayor ventana mejora resolución frecuencial a costa de resolución temporal. `--max-frequency` limita sólo el eje de representación, no aplica filtrado.
 
-1. Lectura del archivo WAV.
-2. Obtención de la frecuencia de muestreo.
-3. Cálculo del período de muestreo.
-4. Cálculo de la duración y el número de muestras.
-5. Obtención de estadísticas básicas de amplitud.
-6. Representación de la señal en el dominio del tiempo.
-7. Análisis del espectro de magnitud mediante la transformada rápida de Fourier (FFT).
-8. Normalización de amplitud.
-9. Segmentación de la grabación en intervalos de dos segundos.
-10. Visualización del primer segmento y comparación de todos los segmentos.
-11. Cálculo del valor RMS de cada segmento.
-12. Exportación de los valores RMS a un archivo CSV.
+## Segmentación
 
-Durante la ejecución aparecerán varias ventanas con gráficas. Puede ser necesario cerrar cada ventana para que el programa continúe y termine de mostrar los resultados.
+```bash
+python src/analyze_audio.py data/raw --segment-duration 2 --segment-overlap 0.5 --segment-window hann --incomplete keep
+```
 
-### 5.6 Archivos generados
+Por defecto: 2 s, sin solapamiento, ventana rectangular `boxcar`, cola descartada (`drop`). `keep` conserva una última cola con su longitud real sin rellenar ceros; el RMS y la energía corresponden a esa longitud. El salto es `round(N*(1-solapamiento))` con mínimo una muestra. Se detiene al alcanzar el final para no crear varias colas redundantes. Hann reduce discontinuidades pero modifica RMS y energía: no hay compensación por ganancia de ventana; documentar la elección y mantenerla entre entrenamiento e inferencia. Una ventana fija **no equivale a un ciclo respiratorio**. El resumen registra muestras finales descartadas.
 
-El programa guarda los resultados en la carpeta `results/`.
+## Etiquetado humano
 
-| Archivo | Descripción |
-|---|---|
-| `respiratory_waveform.png` | Representación de la señal original en el dominio del tiempo. |
-| `respiratory_spectrum.png` | Espectro de magnitud obtenido mediante FFT. |
-| `respiratory_normalized.png` | Representación temporal de la señal normalizada. |
-| `respiratory_segment_01.png` | Gráfica del primer segmento de dos segundos. |
-| `respiratory_all_segments.png` | Comparación de los cinco segmentos de la grabación. |
-| `respiratory_segment_rms.csv` | Tabla con los valores RMS de cada segmento. |
+Crear un CSV UTF-8 externo al código. El nombre debe coincidir exactamente con `file_id` del CSV de características:
 
-Estos archivos permiten revisar tanto los resultados visuales como los valores numéricos obtenidos durante el procesamiento.
+```csv
+file_id,segment_id,human_label,participant_id
+mi_grabacion.wav,,actividad_respiratoria_audible,p01
+mi_grabacion.wav,3,ruido_externo,p01
+otra_grabacion.wav,,baja_actividad_acustica,p02
+```
 
-### 5.7 Resultados de referencia de la implementación inicial
+Son ejemplos de formato y categorías propuestas, no etiquetas asignadas a los audios del repositorio. `segment_id` vacío etiqueta toda la grabación; un índice concreto tiene prioridad. Evitar etiquetas globales cuando la grabación mezcla categorías. Escuchar cada intervalo y revisar su espectrograma; usar baja actividad sólo como descripción acústica, nunca apnea. Ruido externo puede incluir voz, golpes o tráfico. Si es ambiguo dejarlo sin etiqueta y excluirlo del entrenamiento. Documentar criterio y anotador; idealmente dos personas revisan una muestra y resuelven discrepancias. Identificar participantes sin publicar nombres. No inferir etiquetas de RMS o frecuencia.
 
-Para comprobar el funcionamiento del programa se utilizó una grabación propia de diez segundos.
+```bash
+python src/analyze_audio.py data/raw --labels data/labels.csv --output results
+```
 
-Los parámetros obtenidos fueron:
+Los campos calculados son independientes de `human_label`; las predicciones se guardan en otro CSV con columna `prediction` y su procedencia. La demo conserva el nombre de columna `human_label` por compatibilidad de esquema, pero lo marca explícitamente `label_source=synthetic_generator`; no es anotación humana.
 
-| Parámetro | Resultado |
-|---|---|
-| Frecuencia de muestreo | 44.100 Hz |
-| Período de muestreo | Aproximadamente 0,00002268 s |
-| Duración | 10 segundos |
-| Número de muestras | 441.000 |
-| Amplitud mínima original | -7890 |
-| Amplitud máxima original | 8909 |
-| Número de segmentos | 5 |
-| Duración por segmento | 2 segundos |
-| Muestras por segmento | 88.200 |
+## Entrenamiento y evaluación experimental
 
-Los valores RMS calculados sobre la señal normalizada fueron:
+Se implementan KNN, Random Forest y árbol. Sin etiquetas humanas confiables suficientes, **el entrenamiento real queda pendiente**. El código exige al menos 2 clases, 8 grupos y 4 grupos por clase: es un mínimo operativo para dividir, no evidencia de suficiencia estadística ni validación. El conjunto real requiere además una revisión humana de calidad, diversidad y consentimiento que el código no puede certificar.
 
-| Segmento | Intervalo temporal | RMS |
-|---|---|---|
-| 1 | 0–2 segundos | 0.116205 |
-| 2 | 2–4 segundos | 0.210714 |
-| 3 | 4–6 segundos | 0.119952 |
-| 4 | 6–8 segundos | 0.017519 |
-| 5 | 8–10 segundos | 0.006963 |
+Demo verificable sin grabaciones privadas:
 
-El segundo segmento presentó el valor RMS más alto, mientras que el quinto registró el valor más bajo.
+```bash
+python -m src.classify demo --output results/demo_knn --algorithm knn
+python -m src.classify demo --output results/demo_forest --algorithm forest
+python -m src.classify demo --output results/demo_tree --algorithm tree
+python -m src.classify predict results/demo_knn/synthetic_features.csv --model results/demo_knn/model.joblib --output results/demo_predictions.csv
+```
 
-Estos resultados indican que el nivel de amplitud de la grabación varía entre segmentos. Sin embargo, no permiten identificar por sí solos fases respiratorias ni distinguir de manera definitiva los sonidos de respiración del ruido ambiental.
+Las carpetas de modelo y CSV de predicción deben ser nuevos. La demo genera tonos/ruido con semilla 42, 16 grabaciones artificiales y 3 segmentos por grabación; clases `synthetic_tone` y `synthetic_noise`. Sus métricas sólo comprueban el flujo informático, sin valor de evaluación respiratoria.
 
-Los valores de una nueva grabación pueden ser diferentes.
+Con datos reales revisados (reemplazar la ruta por una ejecución real):
 
-### 5.8 Privacidad de los datos y reproducibilidad
+```bash
+python -m src.classify train results/run_ID/features.csv --output results/modelo_real --algorithm knn
+python -m src.classify predict results/run_NUEVO/features.csv --model results/modelo_real/model.joblib --output results/predicciones_nuevas.csv
+```
 
-Las grabaciones originales se almacenan localmente en la carpeta `data/raw/`.
+Se excluyen filas sin etiqueta; se rechazan NaN/infinito, duplicados, orígenes incompatibles, etiquetas sin procedencia humana y participantes incompletos/inconsistentes. Nunca usar `--synthetic` para WAV reales: sólo permite entrenar tablas cuyo origen ya es sintético.
 
-Esta carpeta está excluida del seguimiento de Git mediante el archivo `.gitignore`, por lo que las grabaciones personales no forman parte del repositorio público.
+La división es por participante si todos tienen `participant_id`, o por grabación si ninguno lo tiene. **Si una persona aporta varias grabaciones, completar participant_id en todas**; sin ese dato el código no puede detectar vínculos entre archivos. GroupShuffleSplit reserva aproximadamente 30% de grupos, semilla 42; busca una partición con todas las clases sin consultar métricas. No se comparten grupos ni segmentos solapados entre entrenamiento y prueba. StandardScaler se ajusta sólo a entrenamiento dentro del Pipeline KNN; los árboles no requieren escalado. No se optimizan hiperparámetros contra prueba ni se selecciona automáticamente el mejor algoritmo por su desempeño en ese conjunto.
 
-Para evaluar el proyecto se proporcionan:
+`model.joblib` guarda el Pipeline ajustado sólo al entrenamiento; `split.csv` permite auditar asignaciones y `metrics.json` contiene accuracy, precisión/recall/F1 por clase y macro, soporte, y matriz de confusión (filas reales, columnas predichas, orden en `classes`). Accuracy mide proporción correcta; precisión mide aciertos entre predicciones de una clase; recall mide aciertos entre casos reales de la clase; F1 combina precisión y recall. El promedio macro da igual peso a cada clase; `zero_division=0` para clases no predichas.
 
-- El código utilizado para grabar y analizar las señales.
-- Las instrucciones de instalación y ejecución.
-- Las gráficas obtenidas durante el análisis inicial.
-- Los resultados numéricos exportados a CSV.
-- La descripción de la metodología y de los parámetros utilizados.
+Con pocos grupos las métricas son muy variables, sensibles al reparto, ruido y desequilibrio; no ofrecen validación clínica ni generalización demostrada. Para investigación se necesitan más participantes, revisión de etiquetas y evaluación externa. Comparar algoritmos sobre la misma división es exploratorio; seleccionar repetidamente por prueba introduce sesgo. Usar particiones de validación agrupadas adicionales antes de cualquier selección formal.
 
-Una persona que descargue el repositorio puede reproducir el procedimiento realizando una nueva grabación voluntaria y ejecutando el análisis.
+Cargar únicamente modelos propios/de confianza: joblib utiliza serialización de objetos Python. Mantener en predicción las mismas unidades, fs, duración, ventana, filtro, normalización y protocolo de adquisición del entrenamiento; el archivo de modelo no impone automáticamente esa configuración. Conservar `manifest.json` junto al modelo para reproducibilidad.
 
-Los resultados numéricos no tienen por qué coincidir exactamente con los obtenidos inicialmente, ya que dependen del audio registrado, el micrófono y las condiciones de grabación.
+## Pruebas y verificación
 
+```bash
+python -m pytest -q
+```
 
+Las pruebas generan PCM uint8/int16/int32/float, estéreo, señales vacías y corruptas, tonos conocidos, silencio, filtro con verificación de atenuación/fase, FFT par/impar, STFT, colas, solapamiento, CSV, lotes, etiquetas, clasificación/persistencia de tres algoritmos y ausencia de grupos compartidos. El micrófono se simula. No necesitan grabaciones privadas, red ni hardware. El informe real de ejecución está en [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
-## 6. Conceptos de Teoría de Señales utilizados
+## Privacidad, interpretación y limitaciones
 
-Durante el desarrollo del proyecto se han estudiado y aplicado los siguientes conceptos:
+No publicar WAV ni metadatos personales sin consentimiento explícito. **El `.gitignore` actual no excluye WAV**; revisar `git status` y no añadir audios con `git add .`. No se modificó esa configuración ni se publicó contenido. No asumir que un archivo ya seguido en Git tiene consentimiento por estar versionado.
 
-### Señal de audio
-
-Una señal de audio representa las variaciones producidas por un sonido y puede ser registrada mediante un dispositivo de captura como un micrófono.
-
-### Amplitud
-
-La amplitud representa la magnitud de la señal y permite observar variaciones relacionadas con la intensidad del sonido registrado.
-
-### Frecuencia
-
-La frecuencia representa la cantidad de ciclos de una señal por segundo y se expresa en Hertz (Hz).
-
-El análisis de frecuencia permite estudiar los componentes frecuenciales presentes en los sonidos respiratorios.
-
-### Frecuencia de muestreo
-
-La frecuencia de muestreo indica la cantidad de muestras tomadas de una señal analógica durante un segundo para convertirla en una representación digital.
-
-### Segmentación
-
-La segmentación consiste en dividir una grabación de mayor duración en fragmentos más pequeños para facilitar su análisis.
-
-Por ejemplo, una grabación de varios segundos puede dividirse en segmentos de duración fija antes de realizar la extracción de características.
-
-### Filtrado
-
-El filtrado permite atenuar componentes de frecuencia que no son relevantes para el análisis o que pueden corresponder a ruido e interferencias.
-
-En investigaciones analizadas se utilizan filtros pasa-altos, pasa-bajos y pasa-banda dependiendo de las características de las señales estudiadas.
-
-### Dominio del tiempo
-
-Permite observar cómo cambia la amplitud de la señal a lo largo del tiempo.
-
-### Dominio de la frecuencia
-
-Permite analizar la distribución de energía de una señal en sus diferentes componentes frecuenciales.
-
-### Espectrograma
-
-El espectrograma permite visualizar cómo cambia el contenido frecuencial de una señal a través del tiempo.
-
-Es una herramienta importante para estudiar sonidos respiratorios y observar diferencias entre diferentes tipos de señales.
-
-### Extracción de características
-
-Consiste en obtener información representativa de una señal para utilizarla posteriormente en procesos de análisis o clasificación.
-
-Entre las técnicas encontradas en los artículos estudiados se encuentran:
-
-MFCC (Mel-Frequency Cepstral Coefficients).
-GFCC (Gammatone Frequency Cepstral Coefficients).
-BFCC (Bark Frequency Cepstral Coefficients).
-Características espectrales.
-Características temporales.
-Características basadas en transformadas wavelet.
-
-### Clasificacion 
-
-La clasificación consiste en asignar una señal a una categoría determinada utilizando las características extraídas.
-
-Entre los métodos encontrados en los artículos estudiados se encuentran:
-
-K-Nearest Neighbors (KNN).
-Support Vector Machine (SVM).
-Artificial Neural Networks.
-Random Forest.
-Ensemble methods.
-KNN y otros clasificadores supervisados.
-
-## 7. Resultados actuales
-
-Actualmente se encuentra en desarrollo la etapa de análisis de las señales.
-
-Hasta el momento se han identificado diferentes características que pueden ser utilizadas para representar los sonidos respiratorios y posteriormente clasificarlos.
-
-Los principales resultados obtenidos durante la etapa de investigación son:
-
-### Clasificación de sonidos
-
-Los artículos estudiados muestran que es posible utilizar características acústicas para diferenciar diferentes categorías de sonidos respiratorios, como sonidos normales, sibilancias y tos.
-
-### Representación espectral
-
-El análisis en frecuencia y los espectrogramas permiten observar características que pueden ser difíciles de identificar únicamente mediante la representación temporal de la señal.
-
-### Segmentación
-
-La segmentación permite transformar una grabación extensa en unidades más pequeñas que pueden ser procesadas y clasificadas individualmente.
-
-### Base de datos
-
-Se identificaron diferentes estructuras de bases de datos utilizadas en investigaciones anteriores. Estas incluyen información sobre:
-
-- Tipo de sonido.
-- Duración.
-- Frecuencia de muestreo.
-- Fase respiratoria.
-- Localización anatómica.
-- Etiqueta de clasificación.
-- Información relacionada con el sujeto o la fuente de grabación.
-
-### Próximos resultados
-
-En las siguientes etapas se espera obtener:
-
-- Gráficas de las señales respiratorias en el dominio temporal.
-- Espectrogramas.
-- Características extraídas de las señales.
-- Comparación entre diferentes categorías.
-- Resultados de los algoritmos de clasificación.
-- Métricas de evaluación del clasificador.
-
-## 8. Referencias
-
-Barua, P. D., Goktas, O. F., Dogan, S., Baygin, N., Baygin, M., Salvi, M., Tuncer, T., Tan, R.-S., & Acharya, U. R. (2026). A new lung disorder detection model based on graphene pattern using respiratory sounds. Speech Communication, 181, 103414.
-
-Pan, Y., Liu, H., Deng, C., Li, Z., & Chen, C. (2026). A sound-driven digital twin for reducing passengers’ exposure to exhaled bioaerosols in an aircraft cabin. Building and Environment, 287, 113813.
-
-Rudraraju, G., Palreddy, S., Mamidgi, B., Sripada, N. R., Sai, Y. P., Vodnala, N. K., & Haranath, S. P. (2020). Cough sound analysis and objective correlation with spirometry and clinical diagnosis. Informatics in Medicine Unlocked, 19, 100319.
-
-Semmad, A., & Bahoura, M. (2024). Comparative study of respiratory sounds classification methods based on cepstral analysis and artificial neural networks. Computers in Biology and Medicine, 171, 108190.
-
-Rocha, B. M., Filos, D., Mendes, L., Serbes, G., Ulukaya, S., Kahya, Y. P., Jakovljevic, N., Turukalo, T. L., Vogiatzis, I. M., & Perantoni, E. (2019). An open access database for the evaluation of respiratory sound classification algorithms. Physiological Measurement, 40, 035001.
-
-Nabi, F. G., Ghaffar, A., Ishfaq, K., Sundaraj, K., & Yang, G. Statistical and machine learning analysis of respiratory sounds for multilevel asthma severity classification.
+El sistema analiza acústica digital, incluyendo ruido ambiental y artefactos del micrófono. No identifica inspiración/espiración, ciclos ni condiciones médicas. Depende de condiciones de captura, calibración, longitud, parámetros y etiquetas. Procesa un archivo completo en memoria y guarda PNG; archivos muy extensos pueden requerir una implementación por bloques. Las señales cortas no permiten cualquier filtro; los errores se registran, no se ocultan. Una ejecución parcialmente correcta requiere consultar sus errores. La adquisición física y la ejecución en Windows siguen pendientes de comprobación en esos entornos. El entrenamiento/evaluación real dependen de más grabaciones consentidas y etiquetas confiables.
