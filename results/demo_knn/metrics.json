@@ -1,0 +1,71 @@
+{
+  "status": "SYNTHETIC_DEMO",
+  "algorithm": "knn",
+  "feature_columns": [
+    "rms",
+    "energy",
+    "mean",
+    "std",
+    "dominant_hz",
+    "centroid_hz",
+    "bandwidth_hz",
+    "zcr_per_s"
+  ],
+  "accuracy": 1.0,
+  "precision_macro": 1.0,
+  "recall_macro": 1.0,
+  "f1_macro": 1.0,
+  "classes": [
+    "synthetic_noise",
+    "synthetic_tone"
+  ],
+  "confusion_matrix": [
+    [
+      6,
+      0
+    ],
+    [
+      0,
+      9
+    ]
+  ],
+  "per_class": {
+    "synthetic_noise": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 6
+    },
+    "synthetic_tone": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 9
+    }
+  },
+  "grouping": "file_id",
+  "train_groups": [
+    "synthetic_02",
+    "synthetic_03",
+    "synthetic_04",
+    "synthetic_06",
+    "synthetic_07",
+    "synthetic_08",
+    "synthetic_09",
+    "synthetic_10",
+    "synthetic_11",
+    "synthetic_12",
+    "synthetic_15"
+  ],
+  "test_groups": [
+    "synthetic_00",
+    "synthetic_01",
+    "synthetic_05",
+    "synthetic_13",
+    "synthetic_14"
+  ],
+  "train_rows": 33,
+  "test_rows": 15,
+  "seed": 42,
+  "limitation": "Conjunto pequeño: estimaciones inestables; no diagnóstico ni validación clínica. El modelo guardado sólo se ajusta a entrenamiento."
+}

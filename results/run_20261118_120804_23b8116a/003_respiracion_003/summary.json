@@ -1,0 +1,53 @@
+{
+  "file_id": "respiracion_003.wav",
+  "original": {
+    "sample_rate_hz": 44100,
+    "sample_period_s": 2.2675736961451248e-05,
+    "duration_s": 10.0,
+    "n_samples": 441000,
+    "minimum": -0.0096435546875,
+    "maximum": 0.0079345703125,
+    "mean": 9.134513180272109e-09,
+    "std": 0.0004917091960287618,
+    "rms": 0.000491709196113608,
+    "energy": 0.10662406869232655,
+    "zcr_per_s": 8531.019344715067,
+    "dominant_hz": 227.20000000000002,
+    "centroid_hz": 2463.3539951582216,
+    "bandwidth_hz": 3863.2067357028914
+  },
+  "processed": {
+    "sample_rate_hz": 44100,
+    "sample_period_s": 2.2675736961451248e-05,
+    "duration_s": 10.0,
+    "n_samples": 441000,
+    "minimum": -1.0,
+    "maximum": 0.8227830835603273,
+    "mean": -9.54137247920486e-20,
+    "std": 0.05098832808119613,
+    "rms": 0.05098832808119613,
+    "energy": 1146.516033827421,
+    "zcr_per_s": 8540.019365123277,
+    "dominant_hz": 227.20000000000002,
+    "centroid_hz": 2463.354327885951,
+    "bandwidth_hz": 3863.2068905254387
+  },
+  "config": {
+    "low": null,
+    "high": null,
+    "order": 4,
+    "remove_dc": true,
+    "normalize_peak": true,
+    "segment_duration": 2,
+    "segment_overlap": 0,
+    "segment_window": "boxcar",
+    "incomplete": "drop",
+    "stft_size": 1024,
+    "stft_overlap": 0.5,
+    "stft_window": "hann",
+    "db_floor": -100,
+    "max_frequency": null
+  },
+  "segments": 5,
+  "dropped_tail_samples": 0
+}

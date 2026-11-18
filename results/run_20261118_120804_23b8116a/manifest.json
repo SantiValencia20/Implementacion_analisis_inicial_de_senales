@@ -1,0 +1,22 @@
+{
+  "config": {
+    "low": null,
+    "high": null,
+    "order": 4,
+    "remove_dc": true,
+    "normalize_peak": true,
+    "segment_duration": 2,
+    "segment_overlap": 0,
+    "segment_window": "boxcar",
+    "incomplete": "drop",
+    "stft_size": 1024,
+    "stft_overlap": 0.5,
+    "stft_window": "hann",
+    "db_floor": -100,
+    "max_frequency": null
+  },
+  "files": 3,
+  "successful_files": 3,
+  "failed_files": 0,
+  "segments": 15
+}
